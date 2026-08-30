@@ -4,7 +4,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export default async function init(command: string) {
-    executando(true);
+    const pararLoading = executando(true);
 
     const dir = process.cwd();
 
@@ -27,6 +27,11 @@ export default async function init(command: string) {
         JSON.stringify(conf, null, 2)
     );
 
-    process.exitCode = 0;
-    executando(false, command, process.exitCode);
+    setTimeout(() => {
+        if(pararLoading){
+            pararLoading();
+            process.exitCode = 0;
+            executando(false, command, process.exitCode);
+        }
+    }, 3000)
 }
