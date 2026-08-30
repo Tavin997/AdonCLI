@@ -8,19 +8,19 @@ export default async function init(command: string) {
 
     const dir = process.cwd();
 
-    const path = join(dir, '.adon');
+    //const path = join(dir, 'adon');
 
-    await mkdir(path, {recursive: true });
+    //await mkdir(path, {recursive: true });
 
     const conf = {
         projeto: `${dir.split('/').at(-1)}`,
         versão: 'V1.0.0',
         exec: {
-            "test": "sem executável especificado && echo $?"
+            "test": "adon está funcionando! inclua sua tarefa aqui"
         }
     };
 
-    const file = join(dir, '.adon/adonConf.json');
+    const file = join(dir, 'adonConf.json');
 
     await writeFile(
         file,
