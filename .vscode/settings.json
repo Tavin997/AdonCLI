@@ -7,6 +7,7 @@
         "cli.ts",
         "adon.ts",
         "executando.ts",
-        "init.ts"
+        "init.ts",
+        "settings.json"
     ]
 }
