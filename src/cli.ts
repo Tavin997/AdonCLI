@@ -10,5 +10,5 @@ export default function cli() {
         init(command);
     }
 
-    console.log(command, params);
+    //console.log(command, params);
 }
