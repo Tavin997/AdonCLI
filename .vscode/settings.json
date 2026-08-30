@@ -1,0 +1,12 @@
+{
+    "conventionalCommits.scopes": [
+        "gitignore",
+        "package.json",
+        "tsconfig",
+        "index.ts",
+        "cli.ts",
+        "adon.ts",
+        "executando.ts",
+        "init.ts"
+    ]
+}
