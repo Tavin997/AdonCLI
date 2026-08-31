@@ -1,6 +1,6 @@
 import executando from '../utils/executando.js';
 
-import { mkdir, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export default async function init(command: string) {
@@ -8,30 +8,24 @@ export default async function init(command: string) {
 
     const dir = process.cwd();
 
-    //const path = join(dir, 'adon');
-
-    //await mkdir(path, {recursive: true });
-
     const conf = {
         projeto: `${dir.split('/').at(-1)}`,
         versão: 'V1.0.0',
         exec: {
-            "test": "adon está funcionando! inclua sua tarefa aqui"
+            "test": "inclua uma execução aqui!"
         }
     };
 
-    const file = join(dir, 'adonConf.json');
+    const file = join(dir, 'adon.json');
 
     await writeFile(
         file,
         JSON.stringify(conf, null, 2)
     );
 
-    setTimeout(() => {
-        if(pararLoading){
-            pararLoading();
-            process.exitCode = 0;
-            executando(false, command, process.exitCode);
-        }
-    }, 3000)
+    if(pararLoading){
+        pararLoading();
+        process.exitCode = 0;
+        executando(false, command, process.exitCode);
+    }
 }
