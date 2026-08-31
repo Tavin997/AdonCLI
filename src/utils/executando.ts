@@ -14,6 +14,6 @@ export default function executando(carregando: boolean, command?: string, code?:
             process.stdout.write('\r\x1b[K');
         }
     } else {
-        console.log(`comando \'${command}\',executado!`, `\ncódigo: ${code}`);
+        console.log(`\'${command}\',executado!`, `\ncódigo: ${code}`);
     }
 }
