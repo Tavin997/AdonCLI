@@ -2,6 +2,6 @@
   "projeto": "AdonCLI",
   "versão": "V1.0.0",
   "exec": {
-    "test": "inclua uma execução aqui!"
+    "test": "echo \"Configure sua primeira tarefa\""
   }
 }

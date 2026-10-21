@@ -1,31 +1,28 @@
-import executando from '../utils/executando.js';
+import { writeFile } from "node:fs/promises";
+import { basename, join } from "node:path";
 
-import { writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-
-export default async function init(command: string) {
-    const pararLoading = executando(true);
-
-    const dir = process.cwd();
-
-    const conf = {
-        projeto: `${dir.split('/').at(-1)}`,
-        versão: 'V1.0.0',
+export default async function init(force = false) {
+    const file = join(process.cwd(), "adon.json");
+    const config = {
+        projeto: basename(process.cwd()),
+        versão: "V1.0.0",
         exec: {
-            "test": "inclua uma execução aqui!"
-        }
+            test: "echo \"Configure sua primeira tarefa\"",
+        },
     };
 
-    const file = join(dir, 'adon.json');
+    try {
+        await writeFile(file, JSON.stringify(config, null, 2), {
+            encoding: "utf-8",
+            flag: force ? "w" : "wx",
+        });
+    } catch (error) {
+        if (error instanceof Error && "code" in error && error.code === "EEXIST") {
+            throw new Error("adon.json já existe. Use 'adon init --force' para substituí-lo.");
+        }
 
-    await writeFile(
-        file,
-        JSON.stringify(conf, null, 2)
-    );
-
-    if(pararLoading){
-        pararLoading();
-        process.exitCode = 0;
-        executando(false, command, process.exitCode);
+        throw error;
     }
+
+    console.log(`Configuração criada em ${file}`);
 }

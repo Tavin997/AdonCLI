@@ -7,7 +7,8 @@
     "adon": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "npm run build && node --test"
   },
   "repository": {
     "type": "git",

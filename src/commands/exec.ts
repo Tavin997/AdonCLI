@@ -1,57 +1,54 @@
-import { readFile } from 'node:fs/promises';
-import { join } from "node:path";
 import { spawn } from "node:child_process";
+import { loadConfig } from "../services/config.js";
 
-import executando from '../utils/executando.js';
+export default async function exec(name?: string, list = false) {
+    const config = await loadConfig();
 
-export default async function exec(params?: string) {
+    if (list) {
+        const tasks = Object.keys(config.exec);
+        if (tasks.length === 0) {
+            console.log("Nenhuma tarefa configurada em adon.json.");
+            return;
+        }
 
-    const pararLoading = executando(true);
-
-    if (!params) {
-      console.error(`"${params}" is invalid.`);
-      process.exitCode = 1;
-      return;
+        console.log("Tarefas disponíveis:");
+        for (const task of tasks) {
+            console.log(`  ${task}`);
+        }
+        return;
     }
 
-    const dir = process.cwd();
+    if (!name) {
+        throw new Error("Informe o nome da tarefa. Use 'adon exec --list' para listar as tarefas.");
+    }
 
-    const conf = join(
-        dir,
-        'adon.json'
-    );
+    const command = config.exec[name];
+    if (!command) {
+        throw new Error(`Tarefa '${name}' não encontrada. Use 'adon exec --list' para listar as tarefas.`);
+    }
 
-    const content = await readFile(
-        conf,
-        'utf-8'
-    )
-
-    const exec = JSON.parse(content);
-
-    const command = exec.exec[params];
-
-    await new Promise<void>((resolve, reject) => {
-        
+    const exitCode = await new Promise<number>((resolve, reject) => {
         const child = spawn(command, {
             shell: true,
-            stdio: "inherit"
+            stdio: "inherit",
         });
 
-        child.on("error", reject);
-
-        child.on("close", (code) => {
-            if(code === 1){
-                resolve();
+        child.once("error", reject);
+        child.once("close", (code, signal) => {
+            if (code !== null) {
+                resolve(code);
                 return;
-            };
+            }
 
-            reject(new Error(`código: ${code}`));
+            console.error(`A tarefa '${name}' foi encerrada pelo sinal ${signal ?? "desconhecido"}.`);
+            resolve(1);
         });
     });
 
-    if(pararLoading){
-        pararLoading();
-        process.exitCode = 0;
-        executando(false, params, process.exitCode);
+    process.exitCode = exitCode;
+    if (exitCode === 0) {
+        console.log(`Tarefa '${name}' concluída com sucesso.`);
+    } else {
+        console.error(`Tarefa '${name}' falhou com código ${exitCode}.`);
     }
 }
