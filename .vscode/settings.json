@@ -8,6 +8,7 @@
         "adon.ts",
         "executando.ts",
         "init.ts",
-        "settings.json"
+        "settings.json",
+        "commands.ts"
     ]
 }
